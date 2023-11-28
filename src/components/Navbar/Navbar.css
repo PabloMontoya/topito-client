@@ -1,0 +1,23 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  background-color: var(--navbar-background);
+  padding: 10px;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+}
+
+.fa-user-circle {
+  color: white;
+  margin-left: 10px;
+}
