@@ -1,0 +1,8 @@
+.google-login-container {
+    padding: 10px 0 30px;
+    max-width: var(--form-width);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

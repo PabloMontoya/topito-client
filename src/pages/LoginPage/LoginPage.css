@@ -8,3 +8,11 @@
   margin-bottom: 20px; /* Spacing between title and form */
   font-size: 2em; /* Adjust the size as needed */
 }
+
+.login-logo {
+  max-width: 170px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  padding: 20px;
+}

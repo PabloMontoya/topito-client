@@ -3,7 +3,7 @@
   --secondary-color: #342a47; /* Slightly lighter purple */
   --accent-color: #564f6f; /* Contrasting purple */
   --text-color: #ffffff; /* Light text for contrast */
-  --navbar-background: #1e1b2e; /* Darker purple */
+  --darker-background: #1e1b2e; /* Darker purple */
   --disabled-background-color: #a9a9a9; /* Dark gray */
   --disabled-text-color: #666; /* Darker gray */
   --form-width: 400px;
@@ -26,6 +26,12 @@ body {
 
 .App {
   text-align: center;
+}
+
+a, a:visited, a:hover, a:active {
+  color: var(--darker-background);
+  text-decoration: none;
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {

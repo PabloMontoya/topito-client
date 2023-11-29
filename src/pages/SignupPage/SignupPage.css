@@ -1,0 +1,18 @@
+.login-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.login-title {
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-size: 2em;
+}
+
+.signup-logo {
+  max-width: 170px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  padding: 20px;
+}
