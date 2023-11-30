@@ -2,7 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { SignupSchema } from './SingupForm.schema';
-import { TextField, Button, Box, Typography, Divider, useTheme } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+} from '@mui/material';
 import GoogleAuthButton from '../GoogleAuthButton/GoogleAuthButton';
 
 const SignupForm = ({ setIsAuthenticated }) => {
@@ -24,7 +31,15 @@ const SignupForm = ({ setIsAuthenticated }) => {
   });
 
   return (
-    <Box sx={{ maxWidth: 400, margin: '0 auto', padding: '20px', backgroundColor: theme.palette.background.paper, borderRadius: '8px' }}>
+    <Box
+      sx={{
+        maxWidth: 400,
+        margin: '0 auto',
+        padding: '20px',
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: '8px',
+      }}
+    >
       <form onSubmit={formik.handleSubmit}>
         <TextField
           fullWidth
@@ -57,20 +72,28 @@ const SignupForm = ({ setIsAuthenticated }) => {
           label="Confirm Password"
           value={formik.values.confirmPassword}
           onChange={formik.handleChange}
-          error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-          helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+          error={
+            formik.touched.confirmPassword &&
+            Boolean(formik.errors.confirmPassword)
+          }
+          helperText={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+          }
           margin="normal"
           variant="outlined"
         />
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           fullWidth
           sx={{
             marginY: 2,
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
             '&:hover': { backgroundColor: theme.palette.primary.dark },
-            '&:disabled': { backgroundColor: theme.palette.action.disabled, color: theme.palette.action.disabledBackground }
+            '&:disabled': {
+              backgroundColor: theme.palette.action.disabled,
+              color: theme.palette.action.disabledBackground,
+            },
           }}
           disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}
         >
@@ -78,11 +101,23 @@ const SignupForm = ({ setIsAuthenticated }) => {
         </Button>
       </form>
 
-      <Divider sx={{ my: 2, borderColor: theme.palette.primary.main }} textAlign="center">
-        <Typography variant="h7" component="span" sx={{ color: theme.palette.primary.main, px: 2 }}>OR</Typography>
+      <Divider
+        sx={{ my: 2, borderColor: theme.palette.primary.main }}
+        textAlign="center"
+      >
+        <Typography
+          variant="h7"
+          component="span"
+          sx={{ color: theme.palette.primary.main, px: 2 }}
+        >
+          OR
+        </Typography>
       </Divider>
 
-      <GoogleAuthButton context={'signup'} setIsAuthenticated={setIsAuthenticated} />
+      <GoogleAuthButton
+        context={'signup'}
+        setIsAuthenticated={setIsAuthenticated}
+      />
     </Box>
   );
 };

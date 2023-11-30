@@ -2,7 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { LoginSchema } from './LoginForm.schema';
-import { TextField, Button, Box, Typography, Divider, useTheme } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+} from '@mui/material';
 import GoogleAuthButton from '../GoogleAuthButton/GoogleAuthButton';
 
 const LoginForm = ({ setIsAuthenticated }) => {
@@ -23,7 +30,15 @@ const LoginForm = ({ setIsAuthenticated }) => {
   });
 
   return (
-    <Box sx={{ maxWidth: 400, margin: '0 auto', padding: '20px', backgroundColor: theme.palette.background.paper, borderRadius: '8px' }}>
+    <Box
+      sx={{
+        maxWidth: 400,
+        margin: '0 auto',
+        padding: '20px',
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: '8px',
+      }}
+    >
       <form onSubmit={formik.handleSubmit}>
         <TextField
           fullWidth
@@ -49,15 +64,18 @@ const LoginForm = ({ setIsAuthenticated }) => {
           margin="normal"
           variant="outlined"
         />
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           fullWidth
           sx={{
             marginY: 2,
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
             '&:hover': { backgroundColor: theme.palette.primary.dark },
-            '&:disabled': { backgroundColor: theme.palette.action.disabled, color: theme.palette.action.disabledBackground }
+            '&:disabled': {
+              backgroundColor: theme.palette.action.disabled,
+              color: theme.palette.action.disabledBackground,
+            },
           }}
           disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}
         >
@@ -65,11 +83,23 @@ const LoginForm = ({ setIsAuthenticated }) => {
         </Button>
       </form>
 
-      <Divider sx={{ my: 2, borderColor: theme.palette.primary.main }} textAlign="center">
-        <Typography variant="h7" component="span" sx={{ color: theme.palette.primary.main, px: 2 }}>OR</Typography>
+      <Divider
+        sx={{ my: 2, borderColor: theme.palette.primary.main }}
+        textAlign="center"
+      >
+        <Typography
+          variant="h7"
+          component="span"
+          sx={{ color: theme.palette.primary.main, px: 2 }}
+        >
+          OR
+        </Typography>
       </Divider>
 
-      <GoogleAuthButton context={'signin'} setIsAuthenticated={setIsAuthenticated} />
+      <GoogleAuthButton
+        context={'signin'}
+        setIsAuthenticated={setIsAuthenticated}
+      />
     </Box>
   );
 };

@@ -1,23 +1,23 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2c2c54",
+      main: '#2c2c54',
     },
     secondary: {
-      main: "#342a47",
+      main: '#342a47',
     },
     text: {
-      primary: "#2c2c54",
+      primary: '#2c2c54',
     },
   },
   components: {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#2c2c54", // Focus color for input fields
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#2c2c54', // Focus color for input fields
           },
         },
       },
