@@ -1,53 +1,106 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import { LoginSchema } from './LoginForm.schema';
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+} from '@mui/material';
 import GoogleAuthButton from '../GoogleAuthButton/GoogleAuthButton';
-import './LoginForm.css';
 
 const LoginForm = ({ setIsAuthenticated }) => {
-  const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const [isFormValid, setIsFormValid] = useState(false);
-
-  // Function to update the state based on input values
-  const validateForm = () => {
-    const isUsernameFilled = usernameRef.current && usernameRef.current.value;
-    const isPasswordFilled = passwordRef.current && passwordRef.current.value;
-    setIsFormValid(isUsernameFilled && isPasswordFilled);
-  };
-
-  // Effect to validate form on each input change
-  useEffect(() => {
-    validateForm();
-  }, [usernameRef, passwordRef]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle the login logic here
-  };
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: LoginSchema,
+    onSubmit: (values) => {
+      sessionStorage.setItem('user_email', values.email);
+      setIsAuthenticated(true);
+      navigate('/home');
+      // Handle the signup logic here
+    },
+  });
 
   return (
-    <>
-      <form className="login-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Email"
-          ref={usernameRef}
-          onChange={validateForm}
-          />
-        <input
+    <Box
+      sx={{
+        maxWidth: 400,
+        margin: '0 auto',
+        padding: '20px',
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: '8px',
+      }}
+    >
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          type="email"
+          name="email"
+          label="Email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
+          margin="normal"
+          variant="outlined"
+        />
+        <TextField
+          fullWidth
           type="password"
-          placeholder="Password"
-          ref={passwordRef}
-          onChange={validateForm}
-          />
-        <button type="submit" disabled={!isFormValid}>Login</button>
+          name="password"
+          label="Password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+          margin="normal"
+          variant="outlined"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          sx={{
+            marginY: 2,
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            '&:hover': { backgroundColor: theme.palette.primary.dark },
+            '&:disabled': {
+              backgroundColor: theme.palette.action.disabled,
+              color: theme.palette.action.disabledBackground,
+            },
+          }}
+          disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}
+        >
+          Login
+        </Button>
       </form>
 
-      <div className="divider">
-        <span className="or-text">OR</span>
-      </div>
+      <Divider
+        sx={{ my: 2, borderColor: theme.palette.primary.main }}
+        textAlign="center"
+      >
+        <Typography
+          variant="h7"
+          component="span"
+          sx={{ color: theme.palette.primary.main, px: 2 }}
+        >
+          OR
+        </Typography>
+      </Divider>
 
-      <GoogleAuthButton context={'signin'} setIsAuthenticated={setIsAuthenticated} />
-    </>
+      <GoogleAuthButton
+        context={'signin'}
+        setIsAuthenticated={setIsAuthenticated}
+      />
+    </Box>
   );
 };
 

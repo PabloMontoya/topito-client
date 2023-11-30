@@ -17,7 +17,7 @@ const GoogleAuthButton = ({ setIsAuthenticated, context }) => {
     });
     google.accounts.id.renderButton(
       document.getElementById('googleAuthButton'),
-      { theme:'outline', size:'large' }
+      { theme: 'outline', size: 'large' }
     );
     google.accounts.id.prompt();
     // eslint-disable-next-line
@@ -34,12 +34,10 @@ const GoogleAuthButton = ({ setIsAuthenticated, context }) => {
     sessionStorage.setItem('user_picture', picture);
 
     setIsAuthenticated(true);
-    navigate('/dashboard');
+    navigate('/home');
   };
 
-  return (
-    <div id="googleAuthButton" className="google-login-container"></div>
-  );
+  return <div id="googleAuthButton" className="google-login-container"></div>;
 };
 
 export default GoogleAuthButton;

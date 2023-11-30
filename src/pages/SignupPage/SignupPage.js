@@ -1,18 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import { Typography, Container, Box, Link } from '@mui/material';
 import SignupForm from '../../components/SignupForm/SignupForm';
-import './SignupPage.css';
 
 const SignupPage = ({ setIsAuthenticated }) => {
   return (
-    <div>
-      <h1>Create an Account using Your Email</h1>
-      <img src="/topito.png" alt="Topito Logo" className="signup-logo" />
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{ textAlign: 'center', padding: '20px' }}
+    >
+      <Typography variant="h4" component="h1" sx={{ color: 'white' }}>
+        Create an Account using Your Email
+      </Typography>
+      <Box sx={{ maxWidth: 170, margin: '0 auto', padding: '20px' }}>
+        <img
+          src="/topito.png"
+          alt="Topito Logo"
+          style={{ width: '100%', height: 'auto' }}
+        />
+      </Box>
       <SignupForm setIsAuthenticated={setIsAuthenticated} />
-      <p>
-        Already have an Account? <Link to="/login">Log in instead</Link>
-      </p>
-    </div>
+      <Typography variant="body1" sx={{ color: 'white', marginTop: '20px' }}>
+        Already have an Account?{' '}
+        <Link component={RouterLink} to="/login" sx={{ color: 'inherit' }}>
+          Log in instead
+        </Link>
+      </Typography>
+    </Container>
   );
 };
 
