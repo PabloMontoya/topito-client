@@ -26,19 +26,18 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   const userPicture = sessionStorage.getItem('user_picture');
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'var(--primary-color)' }}>
-      <Toolbar>
-        <img 
-          src="/topito.png" 
-          alt="Topito Logo" 
-          style={{ maxHeight: '40px', marginRight: '10px' }}
-        />
-        <Typography variant="h6" style={{ marginLeft: '10px', fontWeight: 'bold', flexGrow: 0 }}>
-          Topito
-        </Typography>
-        <Box sx={{ flexGrow: 1 }} />
-        {isAuthenticated && (
-          <>
+    isAuthenticated && (
+      <AppBar position="static" sx={{ backgroundColor: 'var(--primary-color)' }}>
+        <Toolbar>
+          <img 
+            src="/topito.png" 
+            alt="Topito Logo" 
+            style={{ maxHeight: '40px', marginRight: '10px' }}
+          />
+          <Typography variant="h6" style={{ marginLeft: '10px', fontWeight: 'bold', flexGrow: 0 }}>
+            Topito
+          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
             <IconButton
               size="large"
               edge="end"
@@ -77,10 +76,9 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
               <MenuItem onClick={() => navigate('/settings')}>Settings</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
-          </>
-        )}
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+    )
   );
 };
 
