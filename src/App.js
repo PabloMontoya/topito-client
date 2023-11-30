@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
 import Navbar from './components/Navbar/Navbar';
 import SignupPage from './pages/SignupPage/SignupPage';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -18,28 +20,30 @@ const App = () => {
   }, [isAuthenticated]);
 
   return (
-    <Router>
-      <div className="App">
-        <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
-        <Routes>
-          <Route 
-              path="/" 
-              element={
-                isAuthenticated 
-                  ? <Navigate to="/home" />
-                  : <SignupPage setIsAuthenticated={setIsAuthenticated} />
-              } 
-            />
-          <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/home" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <HomePage />
-            </ProtectedRoute>
-          } />
-          <Route path="*" element={<Navigate to="/home" />} />
-        </Routes>
-      </div>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <div className="App">
+          <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+          <Routes>
+            <Route 
+                path="/" 
+                element={
+                  isAuthenticated 
+                    ? <Navigate to="/home" />
+                    : <SignupPage setIsAuthenticated={setIsAuthenticated} />
+                } 
+              />
+            <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
+            <Route path="/home" element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <HomePage />
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<Navigate to="/home" />} />
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 };
 
