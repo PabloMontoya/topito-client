@@ -34,7 +34,7 @@ const GoogleAuthButton = ({ setIsAuthenticated, context }) => {
     sessionStorage.setItem('user_picture', picture);
 
     setIsAuthenticated(true);
-    navigate('/dashboard');
+    navigate('/home');
   };
 
   return (
