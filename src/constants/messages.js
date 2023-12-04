@@ -1,4 +1,4 @@
 export const MESSAGES = {
-  WELCOME_BACK: 'Welcome back!',
+  WELCOME: 'Welcome',
   SOMETHING_WENT_WRONG: 'Oops.. Something went wrong',
 };

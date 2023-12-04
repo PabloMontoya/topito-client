@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_SERVICE_URL, AUTH_PORT } from './const';
+import { signJwt } from '../utils/jwt';
 
 const authService = axios.create({
   baseURL: `${API_SERVICE_URL}:${AUTH_PORT}`,
@@ -23,9 +24,21 @@ export const signup = async (credentials) => {
   }
 };
 
-export const refresh = async (userData) => {
+export const refresh = async (credentials) => {
   try {
-    const response = await authService.put('/refresh', userData);
+    const response = await authService.put('/refresh', credentials);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const googleAuth = async (payload) => {
+  const jwt = await signJwt(payload);
+  try {
+    const response = await authService.put('/google_authenticate', {
+      encoded: jwt,
+    });
     return response.data;
   } catch (error) {
     throw error;

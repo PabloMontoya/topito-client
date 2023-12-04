@@ -29,7 +29,7 @@ import GoogleAuthButton from '../GoogleAuthButton/GoogleAuthButton';
 import { LoginSchema } from './LoginForm.schema';
 
 const { INFO, WARNING, ERROR } = NOTIFICATION_TYPES;
-const { WELCOME_BACK, SOMETHING_WENT_WRONG } = MESSAGES;
+const { WELCOME, SOMETHING_WENT_WRONG } = MESSAGES;
 
 const LoginForm = () => {
   const theme = useTheme();
@@ -41,7 +41,7 @@ const LoginForm = () => {
     await login(values)
       .then((response) => {
         if (response.code === 200) {
-          showNotification(INFO, WELCOME_BACK);
+          showNotification(INFO, WELCOME);
           sessionStorage.setItem('user_email', values.email);
           setIsAuthenticated(true);
           navigate(ROUTES.HOME.PATH);
