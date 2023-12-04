@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Typography, Container, Box, Link } from '@mui/material';
+import { Typography, Container, Box, Link, useTheme } from '@mui/material';
 import LoginForm from '../../components/LoginForm/LoginForm';
 
-const LoginPage = ({ setIsAuthenticated }) => {
+const LoginPage = () => {
+  const theme = useTheme();
+
   return (
     <Container
       component="main"
@@ -13,7 +15,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
       <Typography
         variant="h4"
         component="h1"
-        sx={{ color: 'white', marginBottom: '20px' }}
+        sx={{ color: theme.palette.text.white, marginBottom: '20px' }}
       >
         Login to Your Account
       </Typography>
@@ -24,8 +26,11 @@ const LoginPage = ({ setIsAuthenticated }) => {
           style={{ width: '100%', height: 'auto' }}
         />
       </Box>
-      <LoginForm setIsAuthenticated={setIsAuthenticated} />
-      <Typography variant="body1" sx={{ color: 'white', marginTop: '20px' }}>
+      <LoginForm />
+      <Typography
+        variant="body1"
+        sx={{ color: theme.palette.text.white, marginTop: '20px' }}
+      >
         Don't have an account?{' '}
         <Link component={RouterLink} to="/" sx={{ color: 'inherit' }}>
           Sign up

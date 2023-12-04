@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderComp } from '../../tests/renderComp';
+import * as authApi from '../../api/auth';
 import LoginForm from './LoginForm';
 
 // Mock the google object
@@ -14,13 +15,13 @@ global.google = {
   },
 };
 
+jest.mock('../../api/auth', () => ({
+  login: jest.fn(),
+}));
+
 describe('LoginForm', () => {
   it('should render the login form', () => {
-    render(
-      <BrowserRouter>
-        <LoginForm />
-      </BrowserRouter>
-    );
+    renderComp(<LoginForm />);
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
@@ -30,13 +31,11 @@ describe('LoginForm', () => {
     // Mock sessionStorage.setItem
     Storage.prototype.setItem = jest.fn();
 
+    authApi.login.mockResolvedValueOnce({ code: 200 });
+
     const fakeUser = { email: 'user@example.com', password: 'password123' };
 
-    render(
-      <BrowserRouter>
-        <LoginForm setIsAuthenticated={jest.fn()} />
-      </BrowserRouter>
-    );
+    renderComp(<LoginForm />);
 
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: fakeUser.email },

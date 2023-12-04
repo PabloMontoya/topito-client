@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderComp } from '../../tests/renderComp';
+import * as authApi from '../../api/auth';
 import SignupForm from './SignupForm';
 
 // Mock the google object
@@ -14,13 +15,13 @@ global.google = {
   },
 };
 
+jest.mock('../../api/auth', () => ({
+  signup: jest.fn(),
+}));
+
 describe('SignupForm', () => {
   it('should render the signup form', () => {
-    render(
-      <BrowserRouter>
-        <SignupForm />
-      </BrowserRouter>
-    );
+    renderComp(<SignupForm />);
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
     expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
@@ -39,11 +40,9 @@ describe('SignupForm', () => {
       confirmPassword: 'password123',
     };
 
-    render(
-      <BrowserRouter>
-        <SignupForm setIsAuthenticated={jest.fn()} />
-      </BrowserRouter>
-    );
+    authApi.signup.mockResolvedValueOnce({ code: 200 });
+
+    renderComp(<SignupForm />);
 
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: fakeUser.email },
