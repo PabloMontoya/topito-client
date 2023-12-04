@@ -1,20 +1,59 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { SignupSchema } from './SingupForm.schema';
+import { useNavigate } from 'react-router-dom';
 import {
-  TextField,
-  Button,
   Box,
-  Typography,
+  Button,
   Divider,
+  TextField,
+  Typography,
   useTheme,
 } from '@mui/material';
+
+// api
+import { signup } from '../../api/auth';
+
+// context
+import useAuthentication from '../../context/Authentication/useAuthentication';
+import useNotification from '../../context/Notification/useNotification';
+
+// constants
+import { NOTIFICATION_TYPES } from '../../constants/notificationTypes';
+import { ROUTES } from '../../constants/routes';
+import { MESSAGES } from '../../constants/messages';
+
+// components
 import GoogleAuthButton from '../GoogleAuthButton/GoogleAuthButton';
 
-const SignupForm = ({ setIsAuthenticated }) => {
+// schemas
+import { SignupSchema } from './SingupForm.schema';
+
+const { INFO, WARNING, ERROR } = NOTIFICATION_TYPES;
+
+const SignupForm = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const showNotification = useNotification();
+  const { setIsAuthenticated } = useAuthentication();
+
+  const handleSubmit = async (values) => {
+    await signup(values)
+      .then((response) => {
+        if (response.code === 200) {
+          showNotification(INFO, response.message);
+          sessionStorage.setItem('user_email', values.email);
+          setIsAuthenticated(true);
+          navigate(ROUTES.HOME.PATH);
+        } else {
+          showNotification(WARNING, response.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        showNotification(ERROR, MESSAGES.SOMETHING_WENT_WRONG);
+      });
+  };
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -22,12 +61,7 @@ const SignupForm = ({ setIsAuthenticated }) => {
       confirmPassword: '',
     },
     validationSchema: SignupSchema,
-    onSubmit: (values) => {
-      sessionStorage.setItem('user_email', values.email);
-      setIsAuthenticated(true);
-      navigate('/home');
-      // Handle the signup logic here
-    },
+    onSubmit: handleSubmit,
   });
 
   return (

@@ -1,32 +1,67 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { LoginSchema } from './LoginForm.schema';
+import { useNavigate } from 'react-router-dom';
 import {
-  TextField,
-  Button,
   Box,
-  Typography,
+  Button,
   Divider,
+  TextField,
+  Typography,
   useTheme,
 } from '@mui/material';
+
+// api
+import { login } from '../../api/auth';
+
+// context
+import useAuthentication from '../../context/Authentication/useAuthentication';
+import useNotification from '../../context/Notification/useNotification';
+
+// constants
+import { NOTIFICATION_TYPES } from '../../constants/notificationTypes';
+import { ROUTES } from '../../constants/routes';
+import { MESSAGES } from '../../constants/messages';
+
+// components
 import GoogleAuthButton from '../GoogleAuthButton/GoogleAuthButton';
 
-const LoginForm = ({ setIsAuthenticated }) => {
+// schemas
+import { LoginSchema } from './LoginForm.schema';
+
+const { INFO, WARNING, ERROR } = NOTIFICATION_TYPES;
+const { WELCOME_BACK, SOMETHING_WENT_WRONG } = MESSAGES;
+
+const LoginForm = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const showNotification = useNotification();
+  const { setIsAuthenticated } = useAuthentication();
+
+  const handleSubmit = async (values) => {
+    await login(values)
+      .then((response) => {
+        if (response.code === 200) {
+          showNotification(INFO, WELCOME_BACK);
+          sessionStorage.setItem('user_email', values.email);
+          setIsAuthenticated(true);
+          navigate(ROUTES.HOME.PATH);
+        } else {
+          showNotification(WARNING, response.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        showNotification(ERROR, SOMETHING_WENT_WRONG);
+      });
+  };
+
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
     validationSchema: LoginSchema,
-    onSubmit: (values) => {
-      sessionStorage.setItem('user_email', values.email);
-      setIsAuthenticated(true);
-      navigate('/home');
-      // Handle the signup logic here
-    },
+    onSubmit: handleSubmit,
   });
 
   return (

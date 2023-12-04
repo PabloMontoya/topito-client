@@ -1,24 +1,16 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { screen, fireEvent } from '@testing-library/react';
+import { renderComp } from '../../tests/renderComp';
 import Navbar from './Navbar';
 
 describe('Navbar', () => {
   it('should render the navbar when user is authenticated', () => {
-    render(
-      <Router>
-        <Navbar isAuthenticated={true} />
-      </Router>
-    );
+    renderComp(<Navbar />, { authConfig: { isAuthenticated: true } });
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   it('should not render the navbar when user is not authenticated', () => {
-    render(
-      <Router>
-        <Navbar isAuthenticated={false} />
-      </Router>
-    );
+    renderComp(<Navbar />);
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
@@ -26,11 +18,7 @@ describe('Navbar', () => {
     // Mock sessionStorage.clear()
     Storage.prototype.clear = jest.fn();
 
-    render(
-      <Router>
-        <Navbar isAuthenticated={true} setIsAuthenticated={jest.fn()} />
-      </Router>
-    );
+    renderComp(<Navbar />, { authConfig: { isAuthenticated: true } });
 
     // Simulate user clicking on the profile icon button
     const profileIconButton = screen.getByRole('button');

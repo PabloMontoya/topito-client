@@ -1,7 +1,9 @@
 import React from 'react';
-import { Typography, Container } from '@mui/material';
+import { Typography, Container, useTheme } from '@mui/material';
 
 const HomePage = () => {
+  const theme = useTheme();
+
   return (
     <Container
       component="main"
@@ -11,7 +13,7 @@ const HomePage = () => {
       <Typography
         variant="h4"
         component="h1"
-        sx={{ color: 'white', marginBottom: '20px' }}
+        sx={{ color: theme.palette.text.white, marginBottom: '20px' }}
       >
         Home
       </Typography>
