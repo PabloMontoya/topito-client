@@ -1,4 +1,4 @@
-.PHONY: build run stop
+.PHONY: build run stop nuke push
 
 # Docker
 IMAGE_NAME := topito-client
@@ -11,13 +11,13 @@ build:
 	docker build -t $(IMAGE_NAME):$(DOCKER_TAG) .
 
 run:
-	@echo "\033[1;32m🚀 Running $(IMAGE_NAME)...\033[0m"
-	docker run -d -p $(PORT) --name $(IMAGE_NAME):$(DOCKER_TAG) $(IMAGE_NAME)
+	@echo "\033[1;32m🚀 Running $(IMAGE_NAME):$(DOCKER_TAG)...\033[0m"
+	docker run -d -p $(PORT) --name $(IMAGE_NAME)-$(DOCKER_TAG) $(IMAGE_NAME):$(DOCKER_TAG)
 
 stop:
 	@echo "\033[1;31m🛑 Stopping $(IMAGE_NAME)...\033[0m"
-	docker stop $(IMAGE_NAME)
-	docker rm $(IMAGE_NAME)
+	docker stop $(IMAGE_NAME)-$(DOCKER_TAG)
+	docker rm $(IMAGE_NAME)-$(DOCKER_TAG)
 
 nuke:
 	@echo "\033[1;35m💥 Nuking all Docker data...\033[0m"
