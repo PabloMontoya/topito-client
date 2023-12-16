@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Container, useTheme } from '@mui/material';
+import HomeForm from '../../components/HomeForm/HomeForm';
 
 const HomePage = () => {
   const theme = useTheme();
@@ -15,7 +16,7 @@ const HomePage = () => {
         component="h1"
         sx={{ color: theme.palette.text.white, marginBottom: '20px' }}
       >
-        Home
+        <HomeForm />
       </Typography>
     </Container>
   );

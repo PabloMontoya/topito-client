@@ -1,0 +1,363 @@
+{
+  "back_json": {
+    "data": {
+      "users": {},
+      "wolf": {
+        "x": 224,
+        "y": 0,
+        "goingx": 224,
+        "goingy": 0,
+        "attacking": "none"
+      }
+    },
+    "coffers": {},
+    "info": {
+      "messages": {
+        "SE00": [
+          "side-effect",
+          ["SU00", "pd", "RE00", "topito-side-arg-wcp", 0],
+          []
+        ],
+        "SU00": [
+          "pcof",
+          ["topito-str256"],
+          ["soft", "topito-str256", "topito-str256", "topito-str256"]
+        ],
+        "U000": [
+          "put",
+          ["topito-str256", "topito-str256", "dir"],
+          ["topito-num32"]
+        ],
+        "RE00": ["put", ["users", "topito-str256"], ["topito-delete"]]
+      },
+      "messages-state": {
+        "RE00": "no-direct"
+      },
+      "settings": {
+        "crono": false,
+        "connection_pool": 10,
+        "rate_limit": 50
+      }
+    },
+    "job": {
+      "triggers": [
+        {
+          "comment": "sign up",
+          "trigger": "SU00",
+          "code": [
+            "::local-$",
+            "$0",
+            "coffer-",
+            "::string.remove_prefix",
+            "::local->",
+            "user_name",
+            {
+              "dir": 0,
+              "x": 0,
+              "y": 0,
+              "alive": true
+            },
+            "::+data->",
+            ["users", "::local-$", "user_name"],
+            "::+submit"
+          ]
+        },
+        {
+          "comment": "updates for player coords",
+          "trigger": "U000",
+          "code": [
+            "::local-$",
+            "$0",
+            "coffer-",
+            "::string.remove_prefix",
+            "::local->",
+            "user_name",
+            "::if",
+            ["::+data-$", ["users", "::local-$", "user_name", "alive"]],
+            [],
+            ["::abort"],
+            "::if",
+            ["::local-$", "$2", 0, "::connection-or-$", "dir", "!="],
+            [
+              "::local-$",
+              "$2",
+              "::+data->",
+              ["users", "::local-$", "user_name", "dir"],
+              "::if",
+              [0, "::connection-or-$", "dir", 0, "=="],
+              [
+                "::log: LOGTRACK in the if",
+                "::time.timestamp",
+                "::connection->",
+                "start_clock",
+                "::local-$",
+                "$2",
+                "::connection->",
+                "dir",
+                "::+submit"
+              ],
+              [
+                "::log: LOGTRACK in the else",
+                "::connection-$",
+                "start_clock",
+                "::time.deltatime",
+                32.0,
+                "*",
+                "::connection->",
+                "moved",
+                "::if",
+                ["::connection-$", "dir", 1, "=="],
+                [
+                  "::log: LOGTRACK dir == 1",
+                  "::+data-$",
+                  ["users", "::local-$", "user_name", "y"],
+                  "::connection-$",
+                  "moved",
+                  "+",
+                  "::+data->",
+                  ["users", "::local-$", "user_name", "y"],
+                  "::+apply"
+                ],
+                [],
+                "::if",
+                ["::connection-$", "dir", 2, "=="],
+                [
+                  "::+data-$",
+                  ["users", "::local-$", "user_name", "y"],
+                  "::connection-$",
+                  "moved",
+                  "-",
+                  "::+data->",
+                  ["users", "::local-$", "user_name", "y"],
+                  "::+apply"
+                ],
+                [],
+                "::if",
+                ["::connection-$", "dir", 3, "=="],
+                [
+                  "::+data-$",
+                  ["users", "::local-$", "user_name", "x"],
+                  "::connection-$",
+                  "moved",
+                  "+",
+                  "::+data->",
+                  ["users", "::local-$", "user_name", "x"],
+                  "::+apply"
+                ],
+                [],
+                "::if",
+                ["::connection-$", "dir", 4, "=="],
+                [
+                  "::+data-$",
+                  ["users", "::local-$", "user_name", "x"],
+                  "::connection-$",
+                  "moved",
+                  "-",
+                  "::+data->",
+                  ["users", "::local-$", "user_name", "x"],
+                  "::+apply"
+                ],
+                [],
+                "::log: LOGTRACK just to submit",
+                "::local-$",
+                "$2",
+                "::connection->",
+                "dir",
+                "::+submit"
+              ]
+            ],
+            []
+          ]
+        }
+      ],
+      "intervals": [
+        {
+          "comment": "updates for wolf coords",
+          "trigger": 3000,
+          "code": [
+            "::if",
+            ["::+data-$", ["wolf", "attacking"], "none", "!="],
+            ["::abort"],
+            [],
+            "::+data-$",
+            ["wolf", "goingx"],
+            "::+data->",
+            ["wolf", "x"],
+            "::+data-$",
+            ["wolf", "goingy"],
+            "::+data->",
+            ["wolf", "y"],
+            208,
+            224,
+            "::math.random_range",
+            "::+data->",
+            ["wolf", "goingx"],
+            0,
+            112,
+            "::math.random_range",
+            "::+data->",
+            ["wolf", "goingy"],
+            "::+submit"
+          ]
+        },
+        {
+          "comment": "check if wolf attack",
+          "trigger": 500,
+          "code": [
+            1000,
+            "::local->",
+            "short_dist",
+            "::+data-$",
+            ["users"],
+            "::foreach",
+            [
+              "::if",
+              [
+                "::local-$",
+                "$for-val",
+                "::obj-$",
+                ["x"],
+                176,
+                ">=",
+                "::+data-$",
+                ["users", "::local-$", "$for-key", "alive"],
+                "&&",
+                "::+data-$",
+                ["users", "::local-$", "$for-key", "dir"],
+                4,
+                "!=",
+                "&&"
+              ],
+              [
+                "::local-$",
+                "$for-val",
+                "::obj-$",
+                ["x"],
+                "::+data-$",
+                ["wolf", "goingx"],
+                "-",
+                2,
+                "**",
+                "::local-$",
+                "$for-val",
+                "::obj-$",
+                ["y"],
+                "::+data-$",
+                ["wolf", "goingy"],
+                "-",
+                2,
+                "**",
+                "+",
+                "::math.sqrt",
+                "::if",
+                ["::local-$", "short_dist", "<"],
+                [
+                  "::local-$",
+                  "$for-key",
+                  "::local->",
+                  "selected_user",
+                  "::local->",
+                  "short_dist"
+                ],
+                []
+              ],
+              []
+            ],
+            "::if",
+            ["::local-$", "short_dist", 1000, "=="],
+            ["none", "::+data->", ["wolf", "attacking"], "::+submit"],
+            [
+              "::if",
+              ["::+data-$", ["wolf", "attacking"], "none", "!="],
+              ["::abort"],
+              [],
+              "::log: time to DULING!",
+              "::local-$",
+              "selected_user",
+              "::+data->",
+              ["wolf", "attacking"],
+              "::+data-$",
+              ["users", "::local-$", "selected_user", "x"],
+              "::local->",
+              "user_x",
+              "::+data-$",
+              ["users", "::local-$", "selected_user", "y"],
+              "::local->",
+              "user_y",
+              "::local-$",
+              "user_x",
+              "::+data->",
+              ["wolf", "goingx"],
+              "::local-$",
+              "user_y",
+              "::+data->",
+              ["wolf", "goingy"],
+              "::local-$",
+              "short_dist",
+              64.0,
+              "/",
+              1000,
+              "*",
+              "::schedule",
+              [
+                2,
+                "::local-$",
+                "selected_user",
+                "::local-$",
+                "user_x",
+                "::local-$",
+                "user_y"
+              ],
+              "::log: submiting to DULING!",
+              "::+submit"
+            ]
+          ]
+        },
+        {
+          "comment": "check if wolf kills",
+          "trigger": 0,
+          "code": [
+            "::log: killing executing",
+            "::+data-$",
+            ["users", "::local-$", "$0", "x"],
+            "::log: killing continue 1",
+            "::local-$",
+            "$1",
+            "-",
+            2,
+            "**",
+            "::+data-$",
+            ["users", "::local-$", "$0", "y"],
+            "::log: killing continue 2",
+            "::local-$",
+            "$2",
+            "-",
+            2,
+            "**",
+            "+",
+            "::math.sqrt",
+            "::log: killing continue 3",
+            "::if",
+            [
+              8,
+              "<=",
+              "::+data-$",
+              ["users", "::local-$", "$0", "dir"],
+              4,
+              "!=",
+              "&&"
+            ],
+            [
+              false,
+              "::+data->",
+              ["users", "::local-$", "$0", "alive"],
+              "::+submit"
+            ],
+            [],
+            "::log: killing final"
+          ]
+        }
+      ]
+    }
+  }
+}
