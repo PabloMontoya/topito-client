@@ -27,4 +27,4 @@ jobs:
           context: .
           file: ./Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/topito-client:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/topito-client:1.0
