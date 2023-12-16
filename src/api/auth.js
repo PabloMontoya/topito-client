@@ -6,10 +6,14 @@ const authService = axios.create({
   baseURL: `${API_SERVICE_URL}:${AUTH_PORT}`,
 });
 
+const setAuthTokenInSessionStorage = (authToken) =>
+  sessionStorage.setItem('auth_token', authToken);
+
 export const login = async (credentials) => {
   try {
-    const response = await authService.put('/authenticate', credentials);
-    return response.data;
+    const { data } = await authService.put('/authenticate', credentials);
+    setAuthTokenInSessionStorage(data.auth_token);
+    return data;
   } catch (error) {
     throw error;
   }
@@ -17,8 +21,9 @@ export const login = async (credentials) => {
 
 export const signup = async (credentials) => {
   try {
-    const response = await authService.put('/signin', credentials);
-    return response.data;
+    const { data } = await authService.put('/signin', credentials);
+    setAuthTokenInSessionStorage(data.auth_token);
+    return data;
   } catch (error) {
     throw error;
   }
@@ -26,8 +31,9 @@ export const signup = async (credentials) => {
 
 export const refresh = async (credentials) => {
   try {
-    const response = await authService.put('/refresh', credentials);
-    return response.data;
+    const { data } = await authService.put('/refresh', credentials);
+    setAuthTokenInSessionStorage(data.auth_token);
+    return data;
   } catch (error) {
     throw error;
   }
@@ -36,10 +42,11 @@ export const refresh = async (credentials) => {
 export const googleAuth = async (payload) => {
   const jwt = await signJwt(payload);
   try {
-    const response = await authService.put('/google_authenticate', {
+    const { data } = await authService.put('/google_authenticate', {
       encoded: jwt,
     });
-    return response.data;
+    setAuthTokenInSessionStorage(data.auth_token);
+    return data;
   } catch (error) {
     throw error;
   }
